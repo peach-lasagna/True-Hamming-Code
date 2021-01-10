@@ -4,29 +4,31 @@ from typing import Union
 
 def array_count_xor(array: list[int], kbit_num: int):
     n = 0
-    for i in range(2**(kbit_num - 1), len(array) + 1, 2**kbit_num):
-        for j in array[i - 1:i - 1 + 2**(kbit_num - 1)]:
+    for i in range(kbit_num - 1, len(array), 2*kbit_num):
+        for j in array[i: i+kbit_num]:
             n ^= j
     return n
 
-def decode_block(array: list[int], k: int):
-    n = 1
-    bit_err_ind = -1
-    n_mas =[]
 
-    for i in range(1, k+1):
-        bit_err_ind += (n-1) * (array_count_xor(array, i) == array[n-1])
-        n_mas.append(n)
-        n *= 2
+def decode_block(array: list[int], k: int):
+    print(array)
+    kbits = []
+    bit_err_ind = -1
+    for kbit in range(1, k+1):
+        b = 2**kbit//2
+        kbits.append(b)
+        bit_err_ind += (b-1) * (array_count_xor(array , b) == array[b-1])
+        print(kbit,b, kbits, bit_err_ind)
 
     if bit_err_ind != -1:
-        bit_err_ind +=1
-        array[bit_err_ind] ^= 1
-    n = -1
+        array[bit_err_ind-1] ^= 1
 
-    for key in n_mas:
+    n = -1
+    for key in kbits:
         n+=1
         del array[key-1-n]
+    print(array)
+    print('================')
     return array, bit_err_ind if bit_err_ind != -1 else None
 
 
