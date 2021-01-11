@@ -1,6 +1,8 @@
-from .encoder import count_k
 from typing import Union
+from math import ceil, log2
 
+
+count_k = lambda m: ceil(log2(log2(m + 1) + m + 1))
 
 def array_count_xor(array: list[int], kbit_num: int):
     n = 0#array[kbit_num-1]
@@ -32,7 +34,7 @@ def decode(string: str, block_len: int, return_bit_errors: bool= False) -> Union
     """
     In Ham-Code (12,8) block_len == 8
     """
-    array = list(map(int, list(string)))
+    array = list(map(int, string))
     k = count_k(block_len)
     block_len += k
     err_bits = []
