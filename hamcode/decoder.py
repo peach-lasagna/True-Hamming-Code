@@ -3,25 +3,28 @@ from typing import Union
 
 
 def array_count_xor(array: list[int], kbit_num: int):
-    n = 0
-    for i in range(kbit_num - 1, len(array), 2*kbit_num):
+    n = array[kbit_num-1]
+    for i in range(kbit_num-1, len(array), 2*kbit_num):
         for j in array[i: i+kbit_num]:
             n ^= j
     return n
 
 
 def decode_block(array: list[int], k: int):
+    #kbits = [2**kbit//2 for kbit in range(1, k+1)]
+    #bit_err_ind = sum(filter(lambda ind: (ind-1) ,kbits))
+
     print(array)
     kbits = []
     bit_err_ind = -1
     for kbit in range(1, k+1):
         b = 2**kbit//2
         kbits.append(b)
-        bit_err_ind += (b-1) * (array_count_xor(array , b) == array[b-1])
+        bit_err_ind += (b) * (array_count_xor(array , b) == array[b-1])
         print(kbit,b, kbits, bit_err_ind)
 
     if bit_err_ind != -1:
-        array[bit_err_ind-1] ^= 1
+        array[bit_err_ind] ^= 1
 
     n = -1
     for key in kbits:
